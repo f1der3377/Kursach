@@ -1,0 +1,28 @@
+<div class="content">
+  <form action="/services" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="id" value="{{service.id}}">
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Наименование</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Наименование" value="{{service.name}}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="type_service_id" class="form-label">Вид услуги</label>
+      <select class="form-select" name="type_service_id" id="type_service_id" aria-label="Вид услуги" required>
+        <option value="">Выберите тип услуги</option>
+        {{#each typeServices}}
+          <option value="{{this.id}}" {{#isEqual this.id ../service.type_service_id}}selected{{/isEqual}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="price" class="form-label">Цена</label>
+      <input type="number" class="form-control" id="price" name="price" placeholder="Цена" value="{{service.price}}" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>

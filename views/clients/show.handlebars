@@ -1,0 +1,55 @@
+<div class="content">
+  <form action="/clients" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="id" value="{{client.id}}">
+
+    <div class="mb-3">
+      <label for="surname" class="form-label">Фамилия</label>
+      <input type="text" class="form-control" id="surname" name="surname" placeholder="Фамилия" value="{{client.surname}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Имя</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Имя" value="{{client.name}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="patronymic" class="form-label">Отчество</label>
+      <input type="text" class="form-control" id="patronymic" name="patronymic" placeholder="Отчество" value="{{client.patronymic}}" disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="date_birthday" class="form-label">Дата рождения</label>
+      <input type="date" class="form-control" id="date_birthday" name="date_birthday" placeholder="Дата рождения" value="{{client.date_birthday}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="gender" class="form-label">Пол</label>
+      <select class="form-select" name="gender" id="gender" aria-label="Пол" required disabled>
+        <option value="">Выберите пол</option>
+        <option value="0" {{#isEqual client.gender 0}}selected{{/isEqual}}>Женский</option>
+        <option value="1" {{#isEqual client.gender 1}}selected{{/isEqual}}>Мужской</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Телефон</label>
+      <input type="tel" class="form-control" id="phone" name="phone" placeholder="Телефон" value="{{client.phone}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">E-mail</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="E-mail" value="{{client.email}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="bonus_card_id" class="form-label">Бонусная карта</label>
+      <select class="form-select" name="bonus_card_id" id="bonus_card_id" aria-label="Бонусная карта" disabled>
+        <option value="">Бонусная карта отсутствует</option>
+        {{#each bonusCard}}
+          <option value="{{this.id}}" {{#isEqual this.id ../client.bonus_card_id}}selected{{/isEqual}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </form>
+</div>

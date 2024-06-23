@@ -1,0 +1,58 @@
+<div class="content">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Отчет</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">Занятость специалиста</h6>
+
+          <form action="/reports" method="post">
+            <input type="hidden" name="type_report" value="employment-specialist">
+
+            <div class="mb-3">
+              <label for="staff_id" class="form-label">Мастер</label>
+              <select class="form-select" name="staff_id" id="staff_id" aria-label="Мастер" required>
+                <option value="" selected>Выберите Мастера</option>
+                {{#each staff}}
+                  <option value="{{this.id}}">{{this.surname}} {{this.name}} {{this.patronymic}}</option>
+                {{/each}}
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="date" class="form-label">Дата</label>
+              <input type="date" class="form-control" id="date" name="date" placeholder="Дата" required>
+            </div>
+
+            <button type='submit' class="btn btn-primary btn-sm">Скачать отчет</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Отчет</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">Оказания услуг специалиста</h6>
+
+          <form action="/reports" method="post">
+            <input type="hidden" name="type_report" value="order-staff">
+
+            <div class="mb-3">
+              <label for="staff_id" class="form-label">Мастер</label>
+              <select class="form-select" name="staff_id" id="staff_id" aria-label="Мастер" required>
+                <option value="" selected>Выберите Мастера</option>
+                {{#each staff}}
+                  <option value="{{this.id}}">{{this.surname}} {{this.name}} {{this.patronymic}}</option>
+                {{/each}}
+              </select>
+            </div>
+
+            <button type='submit' class="btn btn-primary btn-sm" style="margin-top: 86px">Скачать отчет</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

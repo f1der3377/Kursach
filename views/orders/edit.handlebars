@@ -1,0 +1,76 @@
+<div class="content">
+  <form action="/orders" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="id" value="{{order.id}}">
+    <input type="hidden" name="client_id" value="{{order.client_id}}">
+    <input type="hidden" name="service_id" value="{{order.service_id}}">
+    <input type="hidden" name="date" value="{{order.date}}">
+    <input type="hidden" name="hour" value="{{order.hour}}">
+    <input type="hidden" name="staff_id" value="{{order.staff_id}}">
+    <input type="hidden" name="price" value="{{order.price}}">
+    
+    <div class="mb-3">
+      <label for="status_order_id" class="form-label">Статус</label>
+      <select class="form-select" name="status_order_id" id="status_order_id" aria-label="Статус" required>
+        {{#each statusOrders}}
+          <option value="{{this.id}}" {{#isEqual this.id ../order.status_order_id}}selected{{/isEqual}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label for="client_id" class="form-label">Клиент</label>
+      <select class="form-select" name="client_id" id="client_id" aria-label="Клиент" required disabled>
+        <option value="" selected>Выберите клиента</option>
+        {{#each clients}}
+          <option value="{{this.id}}" {{#isEqual this.id ../order.client_id}}selected{{/isEqual}}>{{this.surname}} {{this.name}} {{this.patronymic}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="service_id" class="form-label">Услуга</label>
+      <select class="form-select" name="service_id" id="service_id" aria-label="Услуга" required disabled>
+        <option value="" selected>Выберите услугу</option>
+        {{#each services}}
+          <option value="{{this.id}}" {{#isEqual this.id ../order.service_id}}selected{{/isEqual}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="price_label" class="form-label">Цена (с учетом скидки)</label>
+      <input type="number" class="form-control" id="price_label" name="price_label" placeholder="Выберите клиента и услугу" value="{{order.price}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="date" class="form-label">Дата оказания услуги</label>
+      <input type="date" class="form-control" id="date" name="date" placeholder="Дата оказания услуги" value="{{order.date}}" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="hour" class="form-label">Час оказания услуги</label>
+      <select class="form-select" name="hour" id="hour" aria-label="Час оказания услуги" required disabled>
+        <option value="" selected>Выберите время</option>
+        <option value="9" {{#isEqual order.hour_original 9}}selected{{/isEqual}}>9 часов</option>
+        <option value="10" {{#isEqual order.hour_original 10}}selected{{/isEqual}}>10 часов</option>
+        <option value="11" {{#isEqual order.hour_original 11}}selected{{/isEqual}}>11 часов</option>
+        <option value="12" {{#isEqual order.hour_original 12}}selected{{/isEqual}}>12 часов</option>
+        <option value="13" {{#isEqual order.hour_original 13}}selected{{/isEqual}}>13 часов</option>
+        <option value="14" {{#isEqual order.hour_original 14}}selected{{/isEqual}}>14 часов</option>
+        <option value="15" {{#isEqual order.hour_original 15}}selected{{/isEqual}}>15 часов</option>
+        <option value="16" {{#isEqual order.hour_original 16}}selected{{/isEqual}}>16 часов</option>
+        <option value="17" {{#isEqual order.hour_original 17}}selected{{/isEqual}}>17 часов</option>
+      </select>
+    </div>
+
+    <div class="mb-3" id="select-master">
+      <label for="staff_id" class="form-label">Мастер</label>
+      <select class="form-select" name="staff_id" id="staff_id" aria-label="Мастер" required disabled>
+        <option value="{{order.staff_id}}" selected>{{order.staff_fio}}</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>

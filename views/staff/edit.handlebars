@@ -1,0 +1,64 @@
+<div class="content">
+  <form action="/staff" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="id" value="{{staff.id}}">
+
+    <div class="mb-3">
+      <label for="surname" class="form-label">Фамилия</label>
+      <input type="text" class="form-control" id="surname" name="surname" placeholder="Фамилия" value="{{staff.surname}}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Имя</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Имя" value="{{staff.name}}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="patronymic" class="form-label">Отчество</label>
+      <input type="text" class="form-control" id="patronymic" name="patronymic" placeholder="Отчество" value="{{staff.patronymic}}">
+    </div>
+
+    <div class="mb-3">
+      <label for="date_birthday" class="form-label">Дата рождения</label>
+      <input type="date" class="form-control" id="date_birthday" name="date_birthday" placeholder="Дата рождения" value="{{staff.date_birthday}}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="gender" class="form-label">Пол</label>
+      <select class="form-select" name="gender" id="gender" aria-label="Пол" required>
+        <option value="">Выберите пол</option>
+        <option value="0" {{#isEqual staff.gender 0}}selected{{/isEqual}}>Женский</option>
+        <option value="1" {{#isEqual staff.gender 1}}selected{{/isEqual}}>Мужской</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Телефон</label>
+      <input type="tel" class="form-control" id="phone" name="phone" placeholder="Телефон" value="{{staff.phone}}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="date_start_work" class="form-label">Дата приема на работу</label>
+      <input type="date" class="form-control" id="date_start_work" name="date_start_work" placeholder="Дата приема на работу" value="{{staff.date_start_work}}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="date_end_work" class="form-label">Дата увольнения</label>
+      <input type="date" class="form-control" id="date_end_work" name="date_end_work" placeholder="Дата увольнения" value="{{staff.date_end_work}}">
+    </div>
+
+    <div class="multifield">
+      <p>Специализации</p>
+      <a class="btn btn-success">Добавить специализацию</a>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<script>
+  $(document).ready(function() {
+    const specialityField = dynamicField.initField($('.multifield'), 'services', 'Специализация', false, 'select', {{{services}}});
+    specialityField({{{staffServices}}})
+  })
+</script>

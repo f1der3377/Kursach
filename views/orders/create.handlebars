@@ -1,0 +1,187 @@
+<div class="content">
+  <form action="/orders" method="post">
+    <input type="hidden" name="_method" value="POST">
+    <input type="hidden" name="status_order_id" value="1">
+    <input type="hidden" name="price">
+    
+    
+    <div class="mb-3">
+      <label for="client_id" class="form-label">Клиент</label>
+      <select class="form-select" name="client_id" id="client_id" aria-label="Клиент" required>
+        <option value="" selected>Выберите клиента</option>
+        {{#each clients}}
+          <option value="{{this.id}}">{{this.surname}} {{this.name}} {{this.patronymic}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="service_id" class="form-label">Услуга</label>
+      <select class="form-select" name="service_id" id="service_id" aria-label="Услуга" required>
+        <option value="" selected>Выберите услугу</option>
+        {{#each services}}
+          <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="price_label" class="form-label">Цена (с учетом скидки)</label>
+      <input type="number" class="form-control" id="price_label" name="price_label" placeholder="Выберите клиента и услугу" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="date" class="form-label">Дата оказания услуги</label>
+      <input type="date" class="form-control" id="date" name="date" placeholder="Дата оказания услуги" required disabled>
+    </div>
+
+    <div class="mb-3">
+      <label for="hour" class="form-label">Час оказания услуги</label>
+      <select class="form-select" name="hour" id="hour" aria-label="Час оказания услуги" required disabled>
+        <option value="" selected>Выберите время</option>
+        <option value="9">9 часов</option>
+        <option value="10">10 часов</option>
+        <option value="11">11 часов</option>
+        <option value="12">12 часов</option>
+        <option value="13">13 часов</option>
+        <option value="14">14 часов</option>
+        <option value="15">15 часов</option>
+        <option value="16">16 часов</option>
+        <option value="17">17 часов</option>
+      </select>
+    </div>
+
+    <div class="mb-3" id="select-master">
+      <label for="staff_id" class="form-label">Мастер</label>
+      <select class="form-select" name="staff_id" id="staff_id" aria-label="Мастер" required disabled>
+        <option value="" selected>Выберите мастера</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('[name=client_id]').change(function (ev) {
+      getPriceWithDiscount();
+    });
+
+    $('[name=service_id]').change(function (ev) {
+      if($(ev.currentTarget).val()) {
+        $('[name=date]').removeAttr('disabled');
+      } else {
+        $('[name=date]').attr('disabled', 1);
+        $('[name=hour]').attr('disabled', 1);
+        $('[name=staff_id]').attr('disabled', 1);
+
+        $('[name=date]').val('').trigger('change');
+        $('[name=hour]').val('').trigger('change');
+        $('[name=staff_id]').val('').trigger('change');
+      }
+
+      getFreeMaster();
+      getPriceWithDiscount();
+    });
+
+    $('[name=date]').change(function (ev) {
+      if($(ev.currentTarget).val()) {
+        $('[name=hour]').removeAttr('disabled');
+      } else {
+        $('[name=hour]').attr('disabled', 1);
+        $('[name=staff_id]').attr('disabled', 1);
+        
+        $('[name=hour]').val('');
+        $('[name=staff_id]').val('').trigger('change');
+      }
+
+      getFreeMaster();
+    })
+
+    $('[name=hour]').change(function (ev) {
+      if(!$(ev.currentTarget).val()) {
+        $('[name=staff_id]').attr('disabled', 1);
+        $('[name=staff_id]').val('').trigger('change');
+      }
+
+      getFreeMaster();
+    })
+
+
+    function getFreeMaster() {
+      const d = $('form').serializeArray();
+      let data = {};
+      for(let obj of d) {
+        data[obj.name] = obj.value;
+      }
+
+      if(data['service_id'] && data['date'] && data['hour']) {
+        $.ajax({
+          url: '/staff/free-staff-data',
+          type: 'get',
+          data: {
+            service_id: data['service_id'],
+            date:       data['date'],
+            hour:       data['hour']
+          },
+          success: (res) => {
+            $('#staff_id').empty();
+            $('#staff_id').append(
+              $('<option>', {
+                'value': '',
+                'text': 'Выберите мастера',
+              })
+            )
+
+            if(res) {
+              $('[name=staff_id]').removeAttr('disabled');
+              $('[name=staff_id]').val('').trigger('change')
+              for(let val of res) {
+                $('#staff_id').append(
+                  $('<option>', {
+                    'value': val.id,
+                    'text': val.staff_fio,
+                  })
+                )
+              }
+            } else {
+              $('[name=staff_id]').attr('disabled', 1);
+            }
+          },
+          error: (xhr, textStatus, error) => {
+            alert(xhr.responseText);
+          }
+        });
+      }
+    }
+  
+    function getPriceWithDiscount() {
+      const d = $('form').serializeArray();
+      let data = {};
+      for(let obj of d) {
+        data[obj.name] = obj.value;
+      }
+
+      $('[name=price]').val('')
+      $('[name=price_label]').val('')
+      if(data['client_id'] && data['service_id']) {
+        $.ajax({
+          url: '/orders/get-price',
+          type: 'get',
+          data: {
+            client_id:  data['client_id'],
+            service_id: data['service_id']
+          },
+          success: (res) => {
+            $('[name=price]').val(res)
+            $('[name=price_label]').val(res)
+          },
+          error: (xhr, textStatus, error) => {
+            alert(xhr.responseText);
+          }
+        });
+      }
+    }
+  });
+</script>

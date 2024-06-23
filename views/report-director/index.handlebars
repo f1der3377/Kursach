@@ -1,0 +1,68 @@
+<div class="content">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Отчет</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">Об оказании услуг за период</h6>
+
+          <form action="/report-director" method="post">
+            <input type="hidden" name="type_report" value="orders">
+
+            <div class="mb-3">
+              <label for="date_start" class="form-label">Дата начала</label>
+              <input type="date" class="form-control" id="date_start" name="date_start" placeholder="Дата" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="date_end" class="form-label">Дата окончания</label>
+              <input type="date" class="form-control" id="date_end" name="date_end" placeholder="Дата" required>
+            </div>
+
+            <button type='submit' class="btn btn-primary btn-sm">Скачать отчет</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Отчет</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">Об объеме работ мастеров</h6>
+
+          <form action="/report-director" method="post">
+            <input type="hidden" name="type_report" value="volume-work-staff">
+
+            <button type='submit' class="btn btn-primary btn-sm" style="margin-top: 172px">Скачать отчет</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6" style="margin-top: 20px">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Отчет</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">Об объемах оказанных услуг</h6>
+
+          <form action="/report-director" method="post">
+            <input type="hidden" name="type_report" value="volume-services">
+
+            <div class="mb-3">
+              <label for="date_start" class="form-label">Дата начала</label>
+              <input type="date" class="form-control" id="date_start" name="date_start" placeholder="Дата" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="date_end" class="form-label">Дата окончания</label>
+              <input type="date" class="form-control" id="date_end" name="date_end" placeholder="Дата" required>
+            </div>
+
+            <button type='submit' class="btn btn-primary btn-sm">Скачать отчет</button>
+          </form>
+        </div>
+      </div>
+    </div>  
+  </div>
+</div>

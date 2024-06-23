@@ -1,0 +1,85 @@
+<div class="content">
+  <div class="elements">
+    <div class="element">
+      <a class="btn btn-success" href="clients/create">
+        <i class="fa-solid fa-circle-plus"></i>
+        Добавить клиента
+      </a>
+    </div>
+
+    <div class="element">
+      <table id="tb" class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">Телефон</th>
+            <th scope="col">Дата рождения</th>
+            <th data-orderable="false" class="text-center" scope="col">Просмотр</th>
+            <th data-orderable="false" class="text-center" scope="col">Редактировать</th>
+            <th data-orderable="false" class="text-center" scope="col">Удалить</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each clients}}
+            <tr>
+              <td>{{ this.surname }}</td>
+              <td>{{ this.name }}</td>
+              <td>{{ this.patronymic }}</td>
+              <td>{{ this.phone }}</td>
+              <td>{{ this.date_birthday }}</td>
+              <td class="text-center">
+                <a href="clients/show/{{this.id}}">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+              </td>
+              <td class="text-center">
+                <a href="clients/edit/{{this.id}}">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+              </td>
+              <td class="text-center">
+                <i class="fa-sharp fa-solid fa-trash remove-element color-red" onclick="removeElement(this, {{this.id}}, '{{this.name}}')"></i>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#tb').DataTable({ 
+      paging: false,
+      language: {
+        search: "Поиск:",
+        lengthMenu: "Показать _MENU_ записей",
+        info: "",
+        emptyTable: "Нет данных для отображения в таблице",
+        infoEmpty: "Показано с 0 по 0 из 0 записей",
+        infoFiltered: "(отфильтровано из _MAX_ записей)",
+      }
+    });
+  });
+
+  function removeElement(element, id, name) {
+    if(!confirm(`Вы действительно хотите удалить элемент ${name}`)) return null;
+
+    $.ajax({
+      url: '/clients',
+      type: 'delete',
+      data: {
+        id
+      },
+      success: (res) => {
+        $(element).parent().parent().remove();
+      },
+      error: (xhr, textStatus, error) => {
+        alert(xhr.responseText);
+      }
+    })
+  }
+</script>

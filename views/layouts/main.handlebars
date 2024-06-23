@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/jquery.dataTables.min.js"></script>
+  <title>{{ title }}</title>
+</head>
+<body>
+  {{#if isNotShowMenu}}
+    {{{ body }}}
+  {{else}}
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-3 p-0" style="position: fixed">
+          <div class="card card-menu vh-100">
+            <div class="card-header">
+              Меню системы
+            </div>
+            <div class="card-body card-meny-body">
+              <ul class="list-group list-group-flush">
+                {{#if defaultData.isCurrentUserRoleAdmin }}
+                  <li class="list-group-item card-menu-item"><a href="/type_service">Виды услуг</a></li>
+                  <li class="list-group-item card-menu-item"><a href="/services">Перечень услуг</a></li>
+                  <li class="list-group-item card-menu-item"><a href="/staff">Мастера</a></li>
+                  <li class="list-group-item card-menu-item"><a href="/clients">Клиенты</a></li>
+                  <li class="list-group-item card-menu-item"><a href="/orders">Заказы</a></li>
+                  <li class="list-group-item card-menu-item"><a href="/reports">Отчеты</a></li>
+                {{else}}
+                  <li class="list-group-item card-menu-item"><a href="/report-director">Отчеты</a></li>
+                {{/if}}
+              </ul>
+            </div>
+            <div class="card-footer">
+              <small class="text-body-secondary">Роль: {{ defaultData.getUserRole }}</small>
+              <br>
+            </div>
+          </div>
+        </nav>
+
+        <div class="offset-3 col-9 header-title" style="position: fixed">
+          {{ defaultData.getHeaderTitle }}
+          <a href="/logout">Выйти из системы</a>
+        </div>
+    </div>
+
+    <div class="row">
+      <main role="main" class="offset-3 col-9">
+        <div class="col-12">
+          {{{ body }}}
+        </div>
+      </main>
+    </div>
+  {{/if}}
+
+  <style>
+    .card-menu {
+      border-radius: 0px;
+    }
+
+    .card-meny-body {
+      padding: 0px;
+    }
+    .card-menu-item {
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .header-main {
+      padding: 0px;
+    }
+
+    .header-title {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.52rem 1.25rem;
+      margin-bottom: 0;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .content {
+      margin-top: 50px;
+    }
+
+    .content .elements .element {
+      margin-bottom: 20px;
+    }
+
+    .color-red {
+      cursor: pointer;
+      color: red;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+      text-align: left!important;
+    }
+
+    .multifield {
+      margin-bottom: 10px;
+    }
+  </style>
+</body>
+</html>
+
+<script>
+  $(document).ready(function() {
+    $('.form-control:required, .form-select:required').each((index, el) => {
+      $(el).prev().append("<span style='color: red'>*</span>")
+    })
+  });
+
+  window.dynamicField = {
+    initField: function ($el, name, label, disabled = false, type = 'input', optionList = null) {
+      let indexField = 0;
+
+      const createDynamicField = (arrVal = null) => {
+        function getElement(index, value) {
+          let divElement = $('<div>', {
+            'class': 'mb-3'
+          });
+
+          let labelElement = $('<label>', {
+            'for': `${name}[${index}]`,
+            'class': 'form-label',
+            'text': label,
+            'css': {
+              'display': 'block'
+            }
+          });
+
+          let inputElement = null;
+          if(type == 'input') {
+            let optionsinputElement = {
+              'type': 'text',
+              'class': 'form-control',
+              'id': `${name}[${index}]`,
+              'name': `${name}[${index}]`,
+              'placeholder': label,
+              'required': true,
+              'value': value,
+              'css': {
+                'width': '85%',
+                'display': 'inline-block'
+              }
+            }
+
+            if(disabled) { optionsinputElement['disabled'] = true }
+
+            inputElement = $('<input>', optionsinputElement);
+          }
+
+          if(type == 'select') {
+            optionsinputElement = {
+              'class': 'form-control',
+              'id': `${name}[${index}]`,
+              'name': `${name}[${index}]`,
+              'aria-label': label,
+              'required': true,
+              'css': {
+                'width': '85%',
+                'display': 'inline-block'
+              }
+            }
+
+            if(disabled) { optionsinputElement['disabled'] = true }
+
+            inputElement = $('<select>', optionsinputElement);
+            
+            let option = {
+              'value': '',
+              'text': 'Выберите',
+            }
+
+            if(!value) { option['selected'] = true }
+            inputElement.append($('<option>', option))
+
+            for(let key in optionList) {
+              let option = {
+                'value': Number(key) + 1,
+                'text': optionList[key],
+              }
+
+              if(value == (Number(key) + 1)) { option['selected'] = true }
+              inputElement.append($('<option>', option))
+            }
+          }
+
+          let deleteButton = $('<button>', {
+            'class': 'btn btn-danger',
+            'text': 'Удалить',
+            'click': function() { $(this).parent().remove(); },
+            'css': {
+              'display': 'inline-block',
+              'margin-left': '10px',
+              'margin-bottom': '4px'
+            }
+          });
+
+          divElement.append(labelElement);
+          divElement.append(inputElement);
+          divElement.append(deleteButton);
+
+          return divElement;
+        }
+
+        if(arrVal != null) {
+          arrVal.map((t) => {
+            const divElement = getElement(indexField++, t);
+            $el.children().last().before(divElement);
+          })
+          
+          arrVal = null;
+        } else {
+          const divElement = getElement(indexField++);
+          $el.children().last().before(divElement);
+        }
+      }
+
+      const $btn = $el.find('.btn')
+      $btn.on('click', createDynamicField.bind(this, null))
+
+      return createDynamicField.bind(this)
+    }
+  }
+</script>

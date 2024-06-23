@@ -1,0 +1,75 @@
+<div class="content">
+  <div class="elements">
+    <div class="element">
+      <a class="btn btn-success" href="services/create">
+        <i class="fa-solid fa-circle-plus"></i>
+        Добавить услугу
+      </a>
+    </div>
+
+    <div class="element">
+      <table id="tb" class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Вид услуги</th>
+            <th scope="col">Наименование</th>
+            <th scope="col">Цена</th>
+            <th data-orderable="false" class="text-center" scope="col">Редактировать</th>
+            <th data-orderable="false" class="text-center" scope="col">Удалить</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each services}}
+            <tr>
+              <td>{{ this.type_service_name }}</td>
+              <td>{{ this.name }}</td>
+              <td>{{ this.price }} ₽</td>
+              <td class="text-center">
+                <a href="services/edit/{{this.id}}">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+              </td>
+              <td class="text-center">
+                <i class="fa-sharp fa-solid fa-trash remove-element color-red" onclick="removeElement(this, {{this.id}}, '{{this.name}}')"></i>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#tb').DataTable({ 
+      paging: false,
+      language: {
+        search: "Поиск:",
+        lengthMenu: "Показать _MENU_ записей",
+        info: "",
+        emptyTable: "Нет данных для отображения в таблице",
+        infoEmpty: "Показано с 0 по 0 из 0 записей",
+        infoFiltered: "(отфильтровано из _MAX_ записей)",
+      }
+    });
+  });
+
+  function removeElement(element, id, name) {
+    if(!confirm(`Вы действительно хотите удалить элемент ${name}`)) return null;
+
+    $.ajax({
+      url: '/services',
+      type: 'delete',
+      data: {
+        id
+      },
+      success: (res) => {
+        $(element).parent().parent().remove();
+      },
+      error: (xhr, textStatus, error) => {
+        alert(xhr.responseText);
+      }
+    })
+  }
+</script>

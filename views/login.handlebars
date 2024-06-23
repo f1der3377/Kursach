@@ -1,0 +1,37 @@
+<div class="container text-center">
+  <div class="row align-items-center justify-content-center vh-100">
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Выберите пользователя системы</h5>
+              <ul class="list-group list-group-flush">
+                {{#each userList}}
+                <li data-id="{{this.id}}" class="list-group-item card-menu-item">{{this.name}} (роль: {{this.role}})</li>
+                {{/each}}
+              </ul>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(() => {
+    $('.list-group-item').click(function () {
+      const val = $(this).data('id');
+      $.ajax({
+        url: '/login',
+        type: "POST",
+        data: {
+          user_id: val
+        },
+        success: (res) => {
+          window.location.href = '/';
+        },
+        error: (xhr, textStatus, error) => {
+          alert(xhr.responseText);
+        }
+      })
+    })
+  });
+</script>
